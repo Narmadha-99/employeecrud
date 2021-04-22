@@ -6,25 +6,20 @@ class ListEmployeeComponent extends Component {
         super(props)
 
        this.state= {
-           employees: {}
+           employees: []
        }
        this.addEmployee = this.addEmployee.bind(this);
-       this.updateEmployee= this.updateEmployee.bind(this);
-       this.deleteEmployee= this.deleteEmployee.bind(this);
+      
        this.viewEmployee= this.viewEmployee.bind(this);
     }
-    updateEmployee(id){
-        this.props.history.push('/updateemployee/${id}');
-    }
-    deleteEmployee(id){
-        //restapi
-    }
+    
     viewEmployee(id){
-        this.props.history.push('/getallemployees');
+        this.props.history.push(`/getemployeebyid/${id}`);
     }
 
     componentDidMount(){
-EmployeeService.getEmployee().then((res) => {
+EmployeeService.getAllEmployee().then((res) => {
+    console.log(res.data)
     this.setState({employees: res.data});
 });
 
@@ -54,16 +49,22 @@ EmployeeService.getEmployee().then((res) => {
                                 </tr>
                             </thead>
                             <tbody>
+                            {
+                                    this.state.employees.map(
+                                        employee => 
+                                
                             
-                                        <tr key = {this.state.employees.id}>
-                                             <td> { this.state.employees.empName} </td>   
-                                             <td> {this.state.employees.deptName}</td>
-                                             <td> {this.state.employees.location}</td>
-                                             <button onClick={ () => this.updateEmployee(this.state.employees.id)} className="btn btn-info">Update </button>
-                                             <button style={{marginLeft: "10px"}} onClick={ () => this.deleteEmployee(this.state.employees.id)} className="btn btn-danger">Delete </button>
-                                             <button style={{marginLeft: "10px"}} onClick={ () => this.viewEmployee(this.state.employees.id)} className="btn btn-warning">View </button>
+                                        <tr key = {employee.empId}>
+                                             <td> {employee.empName} </td>   
+                                             <td> {employee.deptName}</td>
+                                             <td> {employee.location}</td>
+                                    <td>
+                                        <button style={{marginLeft: "10px"}} onClick={ () => this.viewEmployee(employee.empId)} className="btn btn-warning">View </button>
+                                      </td>
                                         </tr>
-                                   
+                                     
+                                    )
+    }
                             </tbody>
                         </table>
                         </div>
